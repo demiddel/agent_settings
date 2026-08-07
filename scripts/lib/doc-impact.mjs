@@ -128,19 +128,50 @@ function extractAffectedDocument(bullet) {
 
 function parseAffectedDocuments(section) {
   const affectedMatch = section.match(
-    /(?:^|\n)\s*Affected documents:\s*\n?([\s\S]*?)(?=\n\s*Reason\s*:|$)/i
+    /(?:^|\n)[ \t]*Affected documents:[ \t]*(?:\n|$)([\s\S]*?)(?=\n[ \t]*Reason[ \t]*:|$)/i
   );
-  if (!affectedMatch) return [];
+  if (!affectedMatch) return { documents: [], errors: [] };
 
   const documents = new Set();
-  for (const line of affectedMatch[1].split('\n')) {
-    const bullet = line.match(/^\s*-\s+(.+)$/);
-    if (!bullet) continue;
-    const document = extractAffectedDocument(bullet[1]);
+  const errors = [];
+  for (const [index, line] of affectedMatch[1].split('\n').entries()) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || stripHtmlComments(trimmedLine) === '') continue;
+
+    if (/^\s*[-*+]\s*$/.test(line)) {
+      errors.push({
+        code: 'malformed-affected-document',
+        message: `Affected documents entry on line ${index + 1} must be a non-empty Markdown bullet.`,
+        paths: [],
+      });
+      continue;
+    }
+
+    const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
+    if (!bullet) {
+      errors.push({
+        code: 'malformed-affected-document',
+        message: `Affected documents entry on line ${index + 1} must use a Markdown bullet followed by whitespace.`,
+        paths: [],
+      });
+      continue;
+    }
+
+    const content = stripHtmlComments(bullet[1]);
+    if (content.startsWith('`') && !/^`[^`]+`(?:\s+[—–]\s+.*)?$/.test(content)) {
+      errors.push({
+        code: 'malformed-affected-document',
+        message: `Affected documents entry on line ${index + 1} has an unclosed or malformed backticked path.`,
+        paths: [],
+      });
+      continue;
+    }
+
+    const document = extractAffectedDocument(content);
     if (document.toLowerCase() === 'none' || document === '') continue;
     documents.add(document);
   }
-  return [...documents];
+  return { documents: [...documents], errors };
 }
 
 function parseReason(section) {
@@ -164,12 +195,14 @@ export function parseDocumentationImpact(body) {
   );
   const section = sectionMatch?.[1] ?? '';
   const selected = declarationCheckboxes(section);
+  const affected = parseAffectedDocuments(section);
 
   return {
     declaration: selected.length === 1 ? selected[0] : null,
     selectedCount: selected.length,
-    affectedDocuments: parseAffectedDocuments(section),
+    affectedDocuments: affected.documents,
     reason: parseReason(section),
+    errors: affected.errors,
   };
 }
 
@@ -184,7 +217,7 @@ export function evaluateDocumentationImpact({ expectedDocs = [], changedPaths = 
   const changedExpectedDocs = normalizedExpectedDocs.filter((doc) =>
     normalizedChangedPaths.has(doc)
   );
-  const errors = [];
+  const errors = [...(declaration?.errors ?? [])];
 
   if (!declaration || declaration.selectedCount !== 1) {
     errors.push({
