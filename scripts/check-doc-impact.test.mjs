@@ -216,6 +216,23 @@ optional
   assert.deepEqual(parsed.affectedDocuments, ['docs/a.md', 'docs/b.md']);
 });
 
+test('accepts all standard Markdown bullet markers for affected documents', () => {
+  const parsed = parseDocumentationImpact(`## Documentation impact
+- [x] Documentation updated
+
+Affected documents:
+- docs/a.md
+* docs/b.md
++ docs/c.md
+
+Reason:
+optional
+`);
+
+  assert.deepEqual(parsed.affectedDocuments, ['docs/a.md', 'docs/b.md', 'docs/c.md']);
+  assert.deepEqual(parsed.errors, []);
+});
+
 test('requires exactly one checked checkbox', () => {
   assert.equal(parseDocumentationImpact(documentationBody()).selectedCount, 0);
   assert.equal(

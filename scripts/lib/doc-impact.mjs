@@ -138,7 +138,7 @@ function parseAffectedDocuments(section) {
     const trimmedLine = line.trim();
     if (!trimmedLine || stripHtmlComments(trimmedLine) === '') continue;
 
-    if (/^\s*-\s*$/.test(line)) {
+    if (/^\s*[-*+]\s*$/.test(line)) {
       errors.push({
         code: 'malformed-affected-document',
         message: `Affected documents entry on line ${index + 1} must be a non-empty Markdown bullet.`,
@@ -147,7 +147,7 @@ function parseAffectedDocuments(section) {
       continue;
     }
 
-    const bullet = line.match(/^\s*-\s+(.+)$/);
+    const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
     if (!bullet) {
       errors.push({
         code: 'malformed-affected-document',
