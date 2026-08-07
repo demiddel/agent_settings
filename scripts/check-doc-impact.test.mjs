@@ -233,6 +233,39 @@ optional
   assert.deepEqual(parsed.errors, []);
 });
 
+test('parses documentation impact declarations with CRLF line endings', () => {
+  const body = `## Summary
+
+Verify the documentation-impact workflow.
+
+## Documentation impact
+
+- [x] Documentation updated
+- [ ] Existing documentation reviewed; no update required
+- [ ] No relevant documentation exists yet
+
+Affected documents:
+
+- \`docs/development/documentation-impact.md\`
+
+Reason:
+
+Updated the authoritative documentation-impact guide.`.replaceAll('\n', '\r\n');
+
+  const parsed = parseDocumentationImpact(body);
+
+  assert.equal(parsed.declaration, 'updated');
+  assert.deepEqual(parsed.affectedDocuments, ['docs/development/documentation-impact.md']);
+  assert.deepEqual(parsed.errors, []);
+
+  const result = evaluateDocumentationImpact({
+    expectedDocs: ['docs/development/documentation-impact.md'],
+    changedPaths: ['docs/development/documentation-impact.md'],
+    declaration: parsed,
+  });
+  assert.equal(result.ok, true);
+});
+
 test('requires exactly one checked checkbox', () => {
   assert.equal(parseDocumentationImpact(documentationBody()).selectedCount, 0);
   assert.equal(
