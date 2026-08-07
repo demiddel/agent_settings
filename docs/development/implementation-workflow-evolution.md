@@ -1,0 +1,40 @@
+# From four roles to one adaptive loop
+
+This repository demonstrates an evolution in implementation discipline. An earlier workflow
+made four agent roles explicit: Surveyor, Architect, Implementer, and Sheriff. That made the
+responsibilities visible, but it also made small tasks carry a fixed choreography.
+
+The lighter workflow keeps the responsibilities and removes the mandatory ceremony:
+
+| Earlier explicit role | Responsibility retained in the adaptive loop |
+| --- | --- |
+| Surveyor | Inspect relevant context and existing patterns |
+| Architect | Plan the intended behavior, affected files, and expected diff |
+| Implementer | Make the smallest coherent change incrementally |
+| Sheriff | Verify the result and self-review the final diff |
+| Learning and context | Keep authoritative guidance and documentation impact in the repository |
+
+The resulting loop is:
+
+**Inspect → Plan the diff → Implement incrementally → Verify → Self-review**
+
+The important part is preserving the responsibilities, not requiring four agents every time.
+For larger work, it can still be valuable to split inspection and planning into independent
+Surveyor and Architect agents. For small work, one agent can carry the same loop without turning
+the task into ceremony.
+
+## Repository routing
+
+`AGENTS.md` is the canonical repository guide. `CLAUDE.md` is a short entry point that tells
+Claude to read it, so Claude and Codex consume the same engineering guidance. The canonical
+implementation workflow lives in `docs/development/implementation-discipline.md`.
+
+Documentation impact closes the loop: the diff is compared with `.docs-map.yml`, authoritative
+docs are updated when behavior or guidance changes, and the pull request explains which docs
+were updated or reviewed unchanged.
+
+## Why this is a useful example
+
+The evolution is more useful than a rule that always says “run four agents.” It shows that a
+workflow can become lighter through use while keeping the quality responsibilities that made the
+original workflow valuable.

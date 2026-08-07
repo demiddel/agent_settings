@@ -1,0 +1,34 @@
+version: 1
+
+# Small example map used by the documentation-impact PR check.
+documentation:
+  - id: documentation-impact-example
+    paths:
+      - .docs-map.yml
+      - .github/pull_request_template.md
+      - .github/workflows/documentation-impact.yml
+      - .nvmrc
+      - AGENTS.md
+      - CLAUDE.md
+      - scripts/check-doc-impact.mjs
+      - scripts/check-doc-impact.test.mjs
+      - scripts/lib/doc-impact.mjs
+      - package.json
+      - docs/development/documentation-impact.md
+    docs:
+      - docs/development/documentation-impact.md
+  - id: implementation-guidance
+    paths:
+      - AGENTS.md
+      - CLAUDE.md
+      - docs/development/implementation-discipline.md
+      - docs/development/implementation-workflow-evolution.md
+    docs:
+      - docs/development/implementation-workflow-evolution.md
+  - id: client-demo
+    paths:
+      - apps/client/src/**
+      - apps/client/scripts/**
+    docs:
+      - apps/client/README.md
+      - apps/client/docs/content-workflow.md

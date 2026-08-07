@@ -1,0 +1,17 @@
+{
+  "name": "agent-settings",
+  "private": true,
+  "description": "Reusable guidance and validation examples for reliable coding-agent changes.",
+  "type": "module",
+  "packageManager": "pnpm@10.12.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test:docs-impact": "node --test scripts/check-doc-impact.test.mjs",
+    "validate:docs-impact": "node scripts/check-doc-impact.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  }
+}
