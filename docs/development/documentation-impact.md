@@ -19,6 +19,8 @@ option:
 annotation are supported, for example `- docs/development/implementation-discipline.md` and
 `- \`docs/development/implementation-discipline.md\` — reviewed; no change required.`. Duplicate
 paths are ignored, `- none` means an empty list, and additional reviewed documents may be listed.
+The validator accepts the standard Markdown bullet markers `-`, `*`, and `+`; the examples here use
+`-` for consistency with the pull request template.
 Malformed non-bullet entries, empty bullets, missing whitespace after a bullet marker, and unclosed
 backticked paths fail with a specific parser diagnostic instead of being silently ignored.
 

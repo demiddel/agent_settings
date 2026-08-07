@@ -190,7 +190,8 @@ function declarationCheckboxes(section) {
 }
 
 export function parseDocumentationImpact(body) {
-  const sectionMatch = String(body ?? '').match(
+  const normalizedBody = String(body ?? '').replace(/\r\n?/g, '\n');
+  const sectionMatch = normalizedBody.match(
     /(?:^|\n)##\s+Documentation impact\s*\n?([\s\S]*?)(?=\n##\s|$)/i
   );
   const section = sectionMatch?.[1] ?? '';
