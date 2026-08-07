@@ -70,7 +70,7 @@ test('infers one and multiple documents from mapped paths', () => {
       - id: two
         paths: [src/two.js]
         docs: [docs/two.md, docs/shared.md]
-  `);
+`);
 
   assert.deepEqual(inferExpectedDocs(['src/one.js'], mapping), ['docs/one.md', 'docs/shared.md']);
   assert.deepEqual(inferExpectedDocs(['src/one.js', 'src/two.js'], mapping), [
@@ -251,6 +251,44 @@ Reason:
 <!-- Explain why no update is needed. -->
 `);
   assert.equal(parsed.reason, '');
+  assert.deepEqual(parsed.errors, []);
+});
+
+test('reports malformed affected-document entries clearly', () => {
+  const parsed = parseDocumentationImpact(`## Documentation impact
+- [x] Documentation updated
+
+Affected documents:
+docs/a.md
+-
+- \`docs/b.md
+- \`docs/c.md\` — valid annotation
+-docs/d.md
+-none
+
+Reason:
+The malformed entries should be fixed.
+`);
+
+  assert.deepEqual(parsed.affectedDocuments, ['docs/c.md']);
+  assert.equal(parsed.errors.length, 5);
+  assert.ok(parsed.errors.every((error) => error.code === 'malformed-affected-document'));
+  assert.match(parsed.errors[0].message, /must use a Markdown bullet followed by whitespace/);
+  assert.match(parsed.errors[1].message, /must be a non-empty Markdown bullet/);
+  assert.match(parsed.errors[2].message, /unclosed or malformed backticked path/);
+  assert.match(parsed.errors[3].message, /must use a Markdown bullet followed by whitespace/);
+  assert.match(parsed.errors[4].message, /must use a Markdown bullet followed by whitespace/);
+
+  const result = evaluateDocumentationImpact({
+    expectedDocs: ['docs/c.md'],
+    changedPaths: ['docs/c.md'],
+    declaration: parsed,
+  });
+  assert.equal(result.ok, false);
+  assert.equal(
+    result.errors.filter((error) => error.code === 'malformed-affected-document').length,
+    5
+  );
 });
 
 test('accepts updated documentation when at least one expected document changed', () => {

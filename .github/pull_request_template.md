@@ -10,11 +10,11 @@
 
 Affected documents:
 
-- <!-- List paths from .docs-map.yml, or write `none`. -->
+- <!-- List every document inferred by .docs-map.yml; optionally include additional reviewed documents. Write “none” when there are no relevant documents. -->
 
 Reason:
 
-<!-- Explain why the selected option is correct. -->
+<!-- Required when “Existing documentation reviewed; no update required” is selected. Useful for mixed updated/reviewed cases. Summarize the behavior, contract, configuration, invariant, or why no update is needed. -->
 
 ## Testing
 
