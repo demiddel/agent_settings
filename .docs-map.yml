@@ -25,6 +25,7 @@ documentation:
       - docs/development/implementation-workflow-evolution.md
     docs:
       - docs/development/implementation-workflow-evolution.md
+      - docs/development/implementation-discipline.md
   - id: client-demo
     paths:
       - apps/client/src/**

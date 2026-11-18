@@ -12,16 +12,25 @@ The lighter workflow keeps the responsibilities and removes the mandatory ceremo
 | Architect | Plan the intended behavior, affected files, and expected diff |
 | Implementer | Make the smallest coherent change incrementally |
 | Sheriff | Verify the result and self-review the final diff |
-| Learning and context | Keep authoritative guidance and documentation impact in the repository |
+| Learning and context | Preserve useful discoveries so the next ticket or engineer doesn't start from zero, and promote durable ones |
+
+Sheriff is self-review by the implementer. It is distinct from an independent reviewer without
+write access.
 
 The resulting loop is:
 
 **Inspect → Plan the diff → Implement incrementally → Verify → Self-review**
 
+Learn sits alongside that loop and stays light for a small task. Larger epics keep a living
+plan under `docs/plans/<epic>/` and promote durable discoveries into authoritative repository
+documentation, as described in `docs/development/implementation-discipline.md`.
+
 The important part is preserving the responsibilities, not requiring four agents every time.
-For larger work, it can still be valuable to split inspection and planning into independent
-Surveyor and Architect agents. For small work, one agent can carry the same loop without turning
-the task into ceremony.
+That describes in-repo coding discipline. It does not by itself define or forbid a larger staged
+Ticket-to-PR pipeline that wraps the loop, such as separate ticket, design, architect, builder,
+PR, and reviewer stages with human gates. For larger work, it can still be valuable to split
+inspection and planning into independent Surveyor and Architect agents. For small work, one
+agent can carry the same loop without turning the task into ceremony.
 
 ## Repository routing
 
