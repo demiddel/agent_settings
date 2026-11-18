@@ -30,6 +30,11 @@ On a pull request, CI infers expected documents from the changed paths, requires
 `Affected documents:`, and checks actual changes using the exact intersection of expected mapped
 documents and changed paths. It does not require every expected document to change.
 
+The CI validator checks consistency between the changed code, the expected documentation, and
+the PR declaration. This doesn't prove that the documentation is semantically correct. It does
+catch inconsistencies between what changed, what the PR says changed, and what repository
+knowledge we expect to be affected. Semantic review remains a human or reviewer responsibility.
+
 Without a pull request event, `pnpm run validate:docs-impact` prints inferred documents and exits
 successfully so it can be used during local development. The PR declaration is validated only when
 the GitHub event contains a `pull_request` object.

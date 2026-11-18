@@ -58,6 +58,19 @@ test('parses the current documentation map', () => {
     paths: ['apps/client/src/**', 'apps/client/scripts/**'],
     docs: ['apps/client/README.md', 'apps/client/docs/content-workflow.md'],
   });
+  assert.deepEqual(mapping.find((entry) => entry.id === 'implementation-guidance'), {
+    id: 'implementation-guidance',
+    paths: [
+      'AGENTS.md',
+      'CLAUDE.md',
+      'docs/development/implementation-discipline.md',
+      'docs/development/implementation-workflow-evolution.md',
+    ],
+    docs: [
+      'docs/development/implementation-workflow-evolution.md',
+      'docs/development/implementation-discipline.md',
+    ],
+  });
 });
 
 test('infers one and multiple documents from mapped paths', () => {
